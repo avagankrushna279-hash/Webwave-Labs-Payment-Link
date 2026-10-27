@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Webwave Pay Admin</title>
+<link rel="icon" type="image/png" href="logo.png">
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5fb;--panel:#fff;--ink:#1b1f3b;--mute:#5f6485;--line:#dcdff0;--blue:#3a4cf0;--blue-ink:#fff;--soft:#e6e9ff;--amber:#8a5200;--amberbg:#fff0d4;--ok:#146c43;--okbg:#dcf2e6;--bad:#b3261e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10122a;--panel:#191c3a;--ink:#eceefc;--mute:#9da3cc;--line:#2c3060;--blue:#8c98ff;--blue-ink:#10122a;--soft:#262a58;--amber:#ffc977;--amberbg:#3a2c10;--ok:#7fdcab;--okbg:#14382a;--bad:#ff9a92}}
+:root[data-theme="dark"]{--bg:#10122a;--panel:#191c3a;--ink:#eceefc;--mute:#9da3cc;--line:#2c3060;--blue:#8c98ff;--blue-ink:#10122a;--soft:#262a58;--amber:#ffc977;--amberbg:#3a2c10;--ok:#7fdcab;--okbg:#14382a;--bad:#ff9a92}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "DM Sans",system-ui,sans-serif}
+h1,h2{font-family:Sora,"DM Sans",sans-serif;margin:0}
+.logo{display:block;height:26px;width:auto;max-width:100%}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .logo{filter:invert(1)}}
+:root[data-theme="dark"] .logo{filter:invert(1)}
+.brandrow{display:flex;flex-direction:column;gap:6px}.brandrow h1{font-size:15px;color:var(--mute);font-weight:600}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 56px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+h1{font-size:22px}h2{font-size:17px;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.stat small{color:var(--mute);display:block}.stat b{font:700 24px Sora,sans-serif}
+.card{margin-bottom:14px}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{font-size:13px;color:var(--mute);display:block}
+input,textarea,select{width:100%;margin-top:4px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:90px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+button,.lnk{padding:9px 14px;border:0;border-radius:8px;background:var(--blue);color:var(--blue-ink);font:600 14px "DM Sans",sans-serif;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .15s}
+button:active{transform:scale(.97)}
+.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.sm{padding:5px 9px;font-size:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.out{margin-top:12px;padding:10px;background:var(--soft);border-radius:8px;word-break:break-all;font-size:13px}
+.msg{margin-top:10px;font-size:14px;min-height:1em}
+.warn{background:var(--amberbg);color:var(--amber);padding:10px 12px;border-radius:10px;margin-bottom:14px;font-size:14px}
+.hide{display:none}
+.tabs button{background:transparent;color:var(--mute);border:1px solid var(--line)}
+.tabs button[aria-pressed=true]{background:var(--blue);color:var(--blue-ink);border-color:var(--blue)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th,td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:500;font-size:12px}
+.pill{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600}
+.pill.paid{background:var(--okbg);color:var(--ok)}.pill.pending{background:var(--amberbg);color:var(--amber)}
+.empty{color:var(--mute);padding:18px 0;text-align:center}
+@media (prefers-reduced-motion:no-preference){
+.stat,.card{animation:up .55s cubic-bezier(.2,.7,.2,1) both}
+.stat:nth-child(2){animation-delay:.06s}.stat:nth-child(3){animation-delay:.12s}.stat:nth-child(4){animation-delay:.18s}
+tbody tr{animation:up .35s ease-out both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brandrow"><img class="logo" src="logo.png" alt="Webwave Labs" width="680" height="86"><h1>Pay Admin</h1></div><div class="row" style="margin:0"><a class="lnk alt" id="viewpay" href="index.html" target="_blank" rel="noopener">View payment page</a><a class="lnk alt" href="https://dashboard.razorpay.com" target="_blank" rel="noopener">Razorpay dashboard</a></div></header>
+<div class="warn hide" id="nostore">Browser storage is blocked here, so entries last only until you close this page. Use “Copy backup” often.</div>
+<div class="warn">Records live in <b>this browser only</b>. Keep this page private and use “Copy backup” now and then.</div>
+
+<div class="stats">
+  <div class="stat"><small>Received (confirmed)</small><b id="s1">₹0</b></div>
+  <div class="stat"><small>Pending</small><b id="s2">₹0</b></div>
+  <div class="stat"><small>This month</small><b id="s3">₹0</b></div>
+  <div class="stat"><small>Open links</small><b id="s4">0</b></div>
+</div>
+
+<section class="card" aria-labelledby="g-h"><h2 id="g-h">Create a payment link</h2>
+  <div class="f">
+    <label>Client name<input id="gc" type="text" placeholder="Golden Tooth Dental"></label>
+    <label>Client WhatsApp (optional)<input id="gp" type="tel" placeholder="98XXXXXXXX"></label>
+    <label>Amount (₹)<input id="ga" type="number" min="1" step="0.01" inputmode="decimal"></label>
+    <label>For<input id="gf" type="text" placeholder="Website build, 50% advance"></label>
+    <label>Invoice no.<input id="gi" type="text" placeholder="Auto"></label>
+  </div>
+  <label style="margin-top:10px">Payment page address<input id="gb" type="text"></label>
+  <div class="row"><button id="gen" type="button">Generate link</button></div>
+  <div class="msg" id="gm" role="status"></div>
+  <div class="out hide" id="go"></div>
+  <div class="row hide" id="gr"><button class="alt" id="gcp" type="button">Copy link</button><a class="lnk alt" id="gop" href="#" target="_blank" rel="noopener">Preview</a><a class="lnk" id="gwa" href="#" target="_blank" rel="noopener">Send on WhatsApp</a></div>
+</section>
+
+<section class="card" aria-labelledby="p-h"><h2 id="p-h">Paste a client’s payment message</h2>
+  <p style="margin:0 0 8px;color:var(--mute)">Paste the WhatsApp message from the payment page. It marks the matching invoice paid, or adds a new paid entry.</p>
+  <textarea id="pt" aria-label="Payment message" placeholder="Payment sent to Webwave Labs.&#10;Name: …&#10;Amount: ₹…&#10;Invoice: …&#10;UTR: …"></textarea>
+  <div class="row"><button id="pb" type="button">Record payment</button></div>
+  <div class="msg" id="pm" role="status"></div>
+</section>
+
+<section class="card" aria-labelledby="l-h"><h2 id="l-h">Payments</h2>
+  <div class="row tabs" style="margin:0 0 10px" id="tabs">
+    <button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="pending" aria-pressed="false">Pending</button><button type="button" data-f="paid" aria-pressed="false">Paid</button>
+  </div>
+  <div class="tw"><table><thead><tr><th>Date</th><th>Client</th><th>For</th><th>Invoice</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>
+  <div class="empty hide" id="em">No payments yet. Create a link to get started.</div>
+  <div class="row"><button class="alt" id="csv" type="button">Copy CSV</button><button class="alt" id="bk" type="button">Copy backup</button><button class="alt" id="rs" type="button">Restore from backup</button></div>
+  <div class="msg" id="lm" role="status"></div>
+</section>
+</div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var KEY='wwpay.ledger.v1',CFG='wwpay.cfg.v1',mem={};
+  function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return mem[k]||d}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v;$('nostore').classList.remove('hide')}}
+  var L=load(KEY,[]),DEF=new URL('index.html',location.href).href.split('?')[0].split('#')[0],C=load(CFG,{base:DEF,n:1}),filter='all';
+  if(!C.base||/claude\.ai\/artifact/.test(C.base)||/^(file|blob):/.test(C.base)&&/^https?:/.test(DEF))C.base=DEF;
+  try{localStorage.setItem('wwpay.admin','1')}catch(e){}
+  $('gb').value=C.base;
+  $('viewpay').href=C.base;
+  function inr(n){return '₹'+(+n).toLocaleString('en-IN',{maximumFractionDigits:2})}
+  function ph(p){p=(p||'').replace(/\D/g,'');return p.length===10?'91'+p:p}
+  function say(id,t,bad){var e=$(id);e.textContent=t;e.style.color=bad?'var(--bad)':'var(--ok)'}
+  function persist(){save(KEY,L);render()}
+  function count(el,to){
+    var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce||!el._v&&to===0){el.textContent=el.dataset.c?to:inr(to);el._v=to;return}
+    var from=el._v||0,t0=null;el._v=to;
+    (function s(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/600,1),v=from+(to-from)*(1-Math.pow(1-p,3));
+      el.textContent=el.dataset.c?Math.round(v):inr(Math.round(v));if(p<1)requestAnimationFrame(s)})(performance.now?performance.now():0);
+  }
+  function stats(){
+    var paid=0,pend=0,mon=0,open=0,m=new Date().toISOString().slice(0,7);
+    L.forEach(function(e){if(e.status==='paid'){paid+=e.amt;if((e.paidAt||e.date).slice(0,7)===m)mon+=e.amt}else{pend+=e.amt;open++}});
+    $('s4').dataset.c=1;count($('s1'),paid);count($('s2'),pend);count($('s3'),mon);count($('s4'),open);
+  }
+  function td(tr,t){var c=document.createElement('td');c.textContent=t;tr.appendChild(c);return c}
+  function btn(label,fn,cls){var b=document.createElement('button');b.type='button';b.className='sm '+(cls||'alt');b.textContent=label;b.onclick=fn;return b}
+  function render(){
+    var tb=$('tb');tb.innerHTML='';
+    var rows=L.filter(function(e){return filter==='all'||e.status===filter}).sort(function(a,b){return b.id-a.id});
+    $('em').classList.toggle('hide',rows.length>0);
+    rows.forEach(function(e,i){
+      var tr=document.createElement('tr');tr.style.animationDelay=Math.min(i*30,300)+'ms';
+      td(tr,e.date.slice(0,10));td(tr,e.client||'—');td(tr,e.for||'—');td(tr,e.inv);td(tr,inr(e.amt));
+      var s=td(tr,'');var p=document.createElement('span');p.className='pill '+e.status;p.textContent=e.status==='paid'?'Paid'+(e.utr?' · '+e.utr.slice(-4):''):'Pending';s.appendChild(p);
+      var a=td(tr,'');a.style.whiteSpace='nowrap';
+      if(e.status!=='paid')a.appendChild(btn('Mark paid',function(){var u=prompt('UTR / reference (optional):','');if(u===null)return;e.status='paid';e.utr=(u||'').trim();e.paidAt=new Date().toISOString();persist()},'')),a.appendChild(document.createTextNode(' '));
+      if(e.status!=='paid'&&e.link){a.appendChild(btn('Remind',function(){window.open('https://wa.me/'+ph(e.phone)+'?text='+encodeURIComponent('Hi '+(e.client||'')+', a gentle reminder for '+inr(e.amt)+' ('+(e.for||e.inv)+'). Pay here: '+e.link),'_blank')}));a.appendChild(document.createTextNode(' '))}
+      if(e.link){a.appendChild(btn('Open',function(){window.open(e.link,'_blank')}));a.appendChild(document.createTextNode(' '))}
+      if(e.link)a.appendChild(btn('Copy link',function(){copy(e.link,'lm','Link copied.')}));
+      a.appendChild(document.createTextNode(' '));
+      a.appendChild(btn('Delete',function(){if(confirm('Delete '+e.inv+'?')){L=L.filter(function(x){return x!==e});persist()}}));
+      tb.appendChild(tr);
+    });
+    stats();
+  }
+  function copy(t,id,ok){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){say(id,ok)},function(){say(id,'Copy blocked by the browser. Select and copy manually.',1)})}
+  var last='';
+  $('gen').onclick=function(){
+    var a=parseFloat($('ga').value),base=$('gb').value.trim().split('?')[0];
+    if(!(a>0)){say('gm','Enter an amount.',1);return}
+    if(!/^https?:\/\//.test(base)){say('gm','Payment page address must start with https://',1);return}
+    var inv=$('gi').value.trim().replace(/[^\w-]/g,'');
+    if(!inv){inv='WW-'+String(C.n).padStart(3,'0');C.n++}
+    var f=$('gf').value.trim()||'Webwave Labs services';
+    var link=base+'?amt='+a+'&for='+encodeURIComponent(f).replace(/%20/g,'+')+'&inv='+encodeURIComponent(inv);
+    C.base=base;save(CFG,C);
+    L.push({id:Date.now(),date:new Date().toISOString(),client:$('gc').value.trim(),phone:$('gp').value,for:f,inv:inv,amt:a,status:'pending',utr:'',link:link});
+    last=link;$('gop').href=link;$('viewpay').href=base;$('go').textContent=link;$('go').classList.remove('hide');$('gr').classList.remove('hide');
+    var c=$('gc').value.trim();
+    $('gwa').href='https://wa.me/'+ph($('gp').value)+'?text='+encodeURIComponent('Hi'+(c?' '+c:'')+', here is your payment link for '+f+' ('+inr(a)+'): '+link);
+    say('gm','Link created and added as Pending.');$('gi').value='';persist();
+  };
+  $('gcp').onclick=function(){copy(last,'gm','Link copied.')};
+  $('pb').onclick=function(){
+    var t=$('pt').value;function g(r){var m=t.match(r);return m?m[1].trim():''}
+    var amt=parseFloat(g(/Amount:\s*₹?\s*([\d,]+(?:\.\d+)?)/i).replace(/,/g,'')),utr=g(/UTR:\s*(\w+)/i),inv=g(/Invoice:\s*([\w-]+)/i),name=g(/Name:\s*(.+)/i),f=g(/For:\s*(.+)/i);
+    if(!(amt>0)||!utr){say('pm','Couldn’t find an amount and UTR in that message.',1);return}
+    var hit=inv&&L.filter(function(e){return e.inv===inv&&e.status!=='paid'})[0];
+    if(hit){hit.status='paid';hit.utr=utr;hit.paidAt=new Date().toISOString();
+      say('pm',inv+' marked paid.'+(Math.abs(hit.amt-amt)>0.5?' Note: client says '+inr(amt)+' but invoice is '+inr(hit.amt)+'. Check your bank.':''),Math.abs(hit.amt-amt)>0.5)}
+    else{L.push({id:Date.now(),date:new Date().toISOString(),client:name,phone:'',for:f,inv:inv||'—',amt:amt,status:'paid',utr:utr,paidAt:new Date().toISOString(),link:''});say('pm','No matching pending invoice, so a new paid entry was added.')}
+    $('pt').value='';persist();
+  };
+  $('tabs').onclick=function(e){var f=e.target.dataset&&e.target.dataset.f;if(!f)return;filter=f;[].forEach.call(this.children,function(b){b.setAttribute('aria-pressed',b.dataset.f===f)});render()};
+  $('csv').onclick=function(){
+    var q=function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'};
+    copy(['Date,Client,For,Invoice,Amount,Status,UTR'].concat(L.map(function(e){return [e.date.slice(0,10),e.client,e.for,e.inv,e.amt,e.status,e.utr].map(q).join(',')})).join('\n'),'lm','CSV copied. Paste it into Excel or Google Sheets.');
+  };
+  $('bk').onclick=function(){copy(JSON.stringify({L:L,C:C}),'lm','Backup copied. Store it somewhere safe.')};
+  $('rs').onclick=function(){
+    var s=prompt('Paste your backup text:');if(!s)return;
+    try{var d=JSON.parse(s);if(!Array.isArray(d.L))throw 0;L=d.L;C=d.C||C;save(CFG,C);$('gb').value=C.base;persist();say('lm','Backup restored.')}catch(e){say('lm','That doesn’t look like a valid backup.',1)}
+  };
+  render();
+})();
+</script>
+</body>
+</html>
